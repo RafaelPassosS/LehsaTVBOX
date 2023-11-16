@@ -1,9 +1,9 @@
 #include <WiFi.h>
 #include <PubSubClient.h>
 
-const char* ssid = "TesteRede";
-const char* password = "mqttteste";
-const char* mqtt_server = "192.168.137.1";
+const char* ssid = "LEHSA";
+const char* password = "";
+const char* mqtt_server = "10.0.0.154";
 const int mqtt_port = 1883;
 const char* mqtt_topic = "TEMPERATURA";
 const char* mqtt_client_id = "arduino_client";
@@ -47,14 +47,11 @@ void loop() {
     }
   }
 
-  // Gere um número aleatório entre 20.0 e 21.0
   float aleatorio = random(2000, 2100) / 100.0;
 
-  // Converta o número para uma string
   char temperaturaStr[10];
   dtostrf(aleatorio, 4, 2, temperaturaStr);
 
-  // Publique a temperatura no tópico "TEMPERATURA"
   mqttClient.publish(mqtt_topic, temperaturaStr);
 
   Serial.print("Publicado no tópico ");
@@ -62,5 +59,5 @@ void loop() {
   Serial.print(": ");
   Serial.println(temperaturaStr);
 
-  delay(1000); // Aguarde 1 segundo antes de publicar o próximo valor
+  delay(1000); 
 }
