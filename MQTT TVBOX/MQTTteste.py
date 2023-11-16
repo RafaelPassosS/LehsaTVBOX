@@ -2,7 +2,10 @@ import paho.mqtt.client as mqtt
 from random import uniform
 import time
 
-mqttBroker = "test.mosquitto.org"
+#IP rede notebook: 192.168.137.176
+#IP rede LEHSA: 10.0.0.154
+
+mqttBroker = "10.0.0.154"
 client = mqtt.Client("TEMPERATURA")
 client.connect(mqttBroker,1883)
 
