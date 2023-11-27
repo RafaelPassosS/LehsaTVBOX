@@ -1,19 +1,27 @@
 #include <WiFi.h>
 #include <PubSubClient.h>
+#include "DHT.h"
+#include <ArduinoJson.h>
 
-const char* ssid = "LEHSA";
-const char* password = "";
+#define DHTPIN 4
+#define DHTTYPE DHT22
+
+DHT dht(DHTPIN, DHTTYPE);
+
+const char* ssid = "TesteRede";
+const char* password = "mqttteste";
 const char* mqtt_server = "10.0.0.154";
 const int mqtt_port = 1883;
-const char* mqtt_topic = "TEMPERATURA";
-const char* mqtt_client_id = "arduino_client";
+const char* mqtt_topic = "TEMPERATURA_HUMIDADE";
+const char* mqtt_client_id = "Temperatura_Humidade";
 
 WiFiClient wifiClient;
 PubSubClient mqttClient(wifiClient);
 
 void setup() {
-  Serial.begin(115200);
+  Serial.begin(9600);
   setup_wifi();
+  dht.begin();
   mqttClient.setServer(mqtt_server, mqtt_port);
 }
 
@@ -47,17 +55,22 @@ void loop() {
     }
   }
 
-  float aleatorio = random(2000, 2100) / 100.0;
+  float h = dht.readHumidity();
+  float t = dht.readTemperature();
 
-  char temperaturaStr[10];
-  dtostrf(aleatorio, 4, 2, temperaturaStr);
+  if (isnan(h) || isnan(t)) {
+    Serial.println(F("Falha ao ler do sensor DHT!"));
+    return;
+  }
 
-  mqttClient.publish(mqtt_topic, temperaturaStr);
+  String tempTopic = mqtt_topic;
+  tempTopic += "/temperatura";
 
-  Serial.print("Publicado no tópico ");
-  Serial.print(mqtt_topic);
-  Serial.print(": ");
-  Serial.println(temperaturaStr);
+  String humiTopic = mqtt_topic;
+  humiTopic += "/umidade";
 
-  delay(1000); 
+  mqttClient.publish(tempTopic.c_str(), String(t).c_str());
+  mqttClient.publish(humiTopic.c_str(), String(h).c_str());
+
+  delay(2000);
 }
