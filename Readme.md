@@ -8,5 +8,5 @@
 
 - [x] Instalar sistema Linux nas TVBOX
 - [x] Transformar as TVBOX em um servidor MQTT
-- [ ] Aplicar essas mudanças nos projetos do LEHSA
+- [x] Aplicar essas mudanças nos projetos do LEHSA
 
